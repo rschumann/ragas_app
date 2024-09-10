@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  langfuse:
+    image: ghcr.io/langfuse/langfuse:latest
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3005
+      # openssl rand -base64 32
+      NEXTAUTH_SECRET: uxfn/M5EvVzRYJB8g2Lz4RV0oFHM3SNUfooQ2gZHCL0=
+      SALT: fEvdTIRolTKJhLX384GWn7QvioyiRArZ+h3bE6ZsTeY=
+    ports:
+      - "3005:3000"
+    depends_on:
+      - db
+
+  db:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_DB: langfuse
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"

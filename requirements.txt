@@ -1,0 +1,37 @@
+# Core Requirements
+ragas @ git+https://github.com/rschumann/ragas.git
+langchain-core
+langchain-openai
+langchain-community
+langchain-experimental
+
+# Machine Learning / AI Libraries
+langdetect
+langfuse
+datasets
+openai
+tiktoken
+
+# Data Science and Visualization
+numpy
+pandas
+matplotlib
+seaborn
+
+# Web Framework
+fastapi
+uvicorn  # Uvicorn without extras
+httptools  # HTTP performance dependency for Uvicorn
+websockets  # WebSocket support for Uvicorn
+
+# Specify Pydantic version 1.x explicitly
+pydantic
+
+# Utilities
+requests
+tenacity
+python-dotenv
+
+# Jupyter Notebook / Interactive Tools
+ipykernel
+ipywidgets
