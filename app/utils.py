@@ -1,6 +1,6 @@
 import os
 import shutil
-import httpx
+import aiohttp
 from fastapi import HTTPException
 
 def clear_ragas_cache():
@@ -14,10 +14,10 @@ async def api_rag(question: str):
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
     data = {"project": PROJECT, "question": question}
     
-    async with httpx.AsyncClient() as client:
-        response = await client.post(API_URL, json=data, headers=headers)
-    if response.status_code == 200:
-        result = response.json()
-        return result["final_answer"], [result["local_answer"], result["global_answer"]]
-    else:
-        raise HTTPException(status_code=response.status_code, detail="RAG API request failed")
+    async with aiohttp.ClientSession() as session:
+        async with session.post(API_URL, json=data, headers=headers) as response:
+            if response.status == 200:
+                result = await response.json()
+                return result["final_answer"], [result["local_answer"], result["global_answer"]]
+            else:
+                raise HTTPException(status_code=response.status, detail="RAG API request failed")

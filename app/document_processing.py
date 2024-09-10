@@ -4,10 +4,14 @@ from langchain_text_splitters import CharacterTextSplitter
 from langchain_openai import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 from fastapi import HTTPException
+import os
 
 def load_and_chunk_documents(file_path, chunk_method):
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-    loader = TextLoader(file_path)
+    absolute_path = os.path.abspath(file_path)
+    if not os.path.exists(absolute_path):
+        raise HTTPException(status_code=400, detail=f"File not found: {absolute_path}")
+    loader = TextLoader(absolute_path)
     documents = loader.load()
 
     if not documents or len(documents) == 0:

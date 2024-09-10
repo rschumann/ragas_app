@@ -1,9 +1,10 @@
+# app/evaluation.py
+
 from ragas import evaluate
 from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
 from datasets import Dataset
 import pandas as pd
 from app.utils import api_rag
-import numpy as np
 
 async def perform_evaluation(testset):
     data = await prepare_evaluation_data(testset)
@@ -16,12 +17,20 @@ async def perform_evaluation(testset):
     )
 
     df = result.to_pandas()
-    df['question'] = df['user_input']
 
-    # Convert result DataFrame to a JSON-serializable format
-    result_dict = df.applymap(lambda x: x.tolist() if isinstance(x, np.ndarray) else x).to_dict(orient="records")
+    # Format the results to match the original structure
+    formatted_results = []
+    for _, row in df.iterrows():
+        formatted_result = {
+            "question": row["user_input"],
+            "faithfulness": float(row["faithfulness"]),
+            "answer_relevancy": float(row["answer_relevancy"]),
+            "context_recall": float(row["context_recall"]),
+            "context_precision": float(row["context_precision"])
+        }
+        formatted_results.append(formatted_result)
 
-    return result_dict
+    return formatted_results
 
 async def prepare_evaluation_data(testset):
     data = {"question": [], "answer": [], "contexts": [], "ground_truth": testset.to_pandas()["ground_truth"].to_list()}

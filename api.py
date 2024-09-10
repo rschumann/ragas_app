@@ -4,6 +4,7 @@ from app.config import setup_environment, setup_logging
 from app.models import EvaluationRequest, EvaluationResponse
 from app.services import evaluate_rag
 import uvicorn
+import traceback
 
 # Apply nest_asyncio to allow re-entering the event loop
 nest_asyncio.apply()
@@ -20,7 +21,12 @@ async def evaluate_rag_endpoint(request: EvaluationRequest):
         return await evaluate_rag(request)
     except Exception as e:
         logger.error(f"Error during evaluation: {str(e)}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=8001)
+    except Exception as e:
+        logger.error(f"Failed to start server: {str(e)}")
+        logger.error(traceback.format_exc())
