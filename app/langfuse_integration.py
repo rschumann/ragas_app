@@ -9,10 +9,12 @@ langfuse = Langfuse(
 
 def log_to_langfuse(evaluation_result, file_path):
     trace = langfuse.trace(
-        name="Evaluation Trace",
-        user_id="user_id_placeholder",
-        metadata={"source_file": file_path},
-        tags=["evaluation"]
+        name = "Sebastian Schkudlara",
+        user_id = "cm0p49bzf0000k7wx3qmhspnr",
+        metadata = {
+            "email": "sebastian@makakoo.com",
+        },
+        tags = ["evaluation"]
     )
     
     for row in evaluation_result:
